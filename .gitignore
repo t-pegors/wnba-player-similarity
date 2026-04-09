@@ -1,0 +1,35 @@
+# Environment
+.env
+.venv/
+venv/
+**/__pycache__/
+*.py[cod]
+*.pyo
+
+# Data files — never commit raw or processed data
+data/raw/
+data/processed/
+
+# Streamlit cache
+.streamlit/
+
+# Jupyter
+.ipynb_checkpoints/
+notebooks/.ipynb_checkpoints/
+
+# Pyvis runtime artifacts (no longer used, but kept here as a safeguard)
+lib/
+*.html
+
+# Claude Code project settings (local only)
+.claude/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+AGENT.md

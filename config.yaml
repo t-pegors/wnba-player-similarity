@@ -1,0 +1,30 @@
+# config.yaml — WNBA Player Similarity Engine
+
+data:
+  league_id: "10"        # WNBA league ID for nba_api
+  season: "2025"         # WNBA season (single-year format)
+  min_minutes: 100       # Minimum minutes played to be included
+  drop_rookies: false    # true = exclude players with WNBA_EXPERIENCE=0 (useful early in a new
+                         # season when rookies have tiny sample sizes). false = include all.
+  raw_path: "data/raw/player_stats.csv"
+  processed_path: "data/processed/sim_matrix.pkl"
+
+# Per-feature weights applied before Z-score scaling.
+# 1.0 = neutral. Adjust to build a positional profile (see examples below).
+# Current default: equal weights for general-purpose similarity across all positions.
+weights:
+  pts: 1.0
+  reb: 1.0
+  ast: 1.0
+  fg3_pct: 1.0
+  stl: 1.0
+  blk: 1.0
+  tov: 0.8      # Slightly downweighted — turnovers are noisy and shouldn't dominate
+  usg_pct: 1.0
+  ts_pct: 1.0
+  pie: 1.0
+  wnba_experience: 0.8  # Slightly downweighted — context signal, not a performance stat
+
+model:
+  sim_threshold: 0.92    # Default edge threshold for galaxy map
+  neighbors_count: 5     # Top-N matches shown in radar view
