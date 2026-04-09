@@ -24,8 +24,8 @@ from src.utils import load_config
 
 # ── Page config ───────────────────────────────────────────────────────────────
 st.set_page_config(
-    page_title="WNBA Similarity Engine",
-    page_icon="🏀",
+    page_title="WNBA Player Similarity",
+    page_icon=None,
     layout="wide",
 )
 
@@ -63,7 +63,7 @@ default_n = cfg["model"]["neighbors_count"]
 
 # ── Sidebar ───────────────────────────────────────────────────────────────────
 with st.sidebar:
-    st.title("🏀 WNBA Similarity")
+    st.title("WNBA Player Similarity")
     st.caption(f"Season: **{season}** · {len(player_df)} players")
     st.divider()
 
@@ -71,7 +71,7 @@ with st.sidebar:
     selected_player = st.selectbox("Select a player", player_names, index=player_names.index("Satou Sabally") if "Satou Sabally" in player_names else 0)
 
     threshold = st.slider(
-        "Similarity threshold (Galaxy Map)",
+        "Similarity threshold",
         min_value=0.70,
         max_value=0.99,
         value=default_threshold,
@@ -80,7 +80,7 @@ with st.sidebar:
     )
 
     top_n = st.slider(
-        "Top-N matches (Radar)",
+        "Matches shown",
         min_value=1,
         max_value=10,
         value=default_n,
@@ -100,23 +100,22 @@ top_match_score = top_matches.iloc[0]["similarity"]
 # Append the ranked match list to the sidebar (second with-block appends content)
 with st.sidebar:
     st.divider()
-    st.markdown("**Top matches**")
+    st.markdown("**Closest matches**")
     for rank, row in top_matches.iterrows():
-        st.markdown(f"`{rank + 1}.` **{row['PLAYER_NAME']}** · {row['TEAM_ABBREVIATION']}")
+        st.markdown(f"{rank + 1}. **{row['PLAYER_NAME']}** — {row['TEAM_ABBREVIATION']}")
         st.progress(float(row["similarity"]), text=f"{row['similarity']:.3f}")
     st.divider()
     st.caption("Data: nba_api · Built with Streamlit")
 
 st.header(f"{selected_player}")
 
-tab1, tab2, tab3 = st.tabs(["🌌 Galaxy Map", "📡 Radar Overlay", "📊 Distribution"])
+tab1, tab2, tab3 = st.tabs(["Similarity Map", "Player Comparison", "Score Distribution"])
 
 # ── Tab 1: Galaxy Map ─────────────────────────────────────────────────────────
 with tab1:
-    st.subheader("Player Similarity Galaxy")
     st.caption(
-        f"MDS-positioned in 3D — physical distance = statistical distance. "
-        f"Edges drawn where similarity > **{threshold:.2f}**. Rotate, zoom, and hover freely."
+        f"MDS-positioned in 3D — physical distance reflects statistical similarity. "
+        f"Edges connect players with similarity > **{threshold:.2f}**."
     )
 
     coords = compute_mds(sim_matrix)  # shape (N, 3)
@@ -179,6 +178,7 @@ with tab1:
         data=traces,
         layout=go.Layout(
             height=650,
+            width=650,
             paper_bgcolor="#0e1117",
             plot_bgcolor="#0e1117",
             scene=dict(
@@ -198,7 +198,7 @@ with tab1:
         ),
     )
 
-    st.plotly_chart(fig3d, use_container_width=True)
+    st.plotly_chart(fig3d, use_container_width=False)
 
 # ── Tab 2: Radar Overlay ──────────────────────────────────────────────────────
 with tab2:
@@ -243,7 +243,7 @@ with tab2:
     v_sel = vals_sel_norm.tolist() + vals_sel_norm[:1].tolist()
     v_top = vals_top_norm.tolist() + vals_top_norm[:1].tolist()
 
-    fig, ax = plt.subplots(figsize=(6, 6), subplot_kw=dict(polar=True))
+    fig, ax = plt.subplots(figsize=(4, 4), subplot_kw=dict(polar=True))
     fig.patch.set_facecolor("#0e1117")
     ax.set_facecolor("#0e1117")
 
@@ -277,10 +277,10 @@ with tab2:
 
 # ── Tab 3: Similarity Distribution ───────────────────────────────────────────
 with tab3:
-    st.subheader("Pairwise Similarity Distribution")
+    st.subheader("Score Distribution")
     st.caption(
-        "Distribution of all player-pair similarity scores. "
-        "Use this to calibrate the Galaxy Map threshold — moving it left reveals more connections, right shows only the tightest clusters."
+        "Distribution of all pairwise similarity scores. "
+        "Use this to calibrate the map threshold — lower values reveal more connections, higher values show only the tightest clusters."
     )
 
     # Extract upper triangle (no diagonal, no duplicates)

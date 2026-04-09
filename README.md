@@ -1,6 +1,8 @@
 # WNBA Player Similarity Engine
 
-A Python tool for finding statistical twins among WNBA players. Built to identify comparable players for roster analysis — originally motivated by finding replacements for Satou Sabally following her departure from the Phoenix Mercury in 2026.
+A Python tool for finding statistical twins among WNBA players. I built this because the Phoenix Mercury just lost Satou Sabally and I'm curious to know what other "similaar" players are out there. 
+
+Similarity scores are fairly simple for this first take - I've pulled basic stats from the NBA-API, z-scored and weighted each stat, and then create a cosine similarity matrix for each pairwise player.
 
 ## Features
 
