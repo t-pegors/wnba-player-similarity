@@ -1,15 +1,26 @@
 # WNBA Player Similarity Engine
 
-A Python tool for finding statistical twins among WNBA players. I built this because the Phoenix Mercury just lost Satou Sabally and I'm curious to know what other "similaar" players are out there. 
+A Python tool for finding statistical twins among WNBA players. I built this because the Phoenix Mercury just lost Satou Sabally and I'm curious to know what other "similar" players are out there. 
 
 Similarity scores are fairly simple for this first take - I've pulled basic stats from the NBA-API, z-scored and weighted each stat, and then create a cosine similarity matrix for each pairwise player.
 
 ## Features
 
-- **3D Galaxy Map** — MDS-positioned interactive graph where physical distance directly reflects statistical similarity. Rotate, zoom, and hover. Edges appear between players above a configurable similarity threshold.
-- **Radar Overlay** — Spider chart comparing a selected player against their closest match across Per-40 and advanced metrics.
-- **Similarity Distribution** — Histogram of all pairwise similarity scores with a live threshold line, so you can tune the galaxy map with data rather than guesswork.
-- **Persistent Top-N Sidebar** — Ranked match list always visible regardless of which tab is active.
+- **Similarity Map** — MDS-positioned interactive 3D graph where physical distance directly reflects statistical similarity. Edges appear between players above a configurable similarity threshold.
+- **Player Comparison** — Spider chart comparing a selected player against their closest match across Per-40 and advanced metrics.
+- **Score Distribution** — Histogram of all pairwise similarity scores with a live threshold line, so you can calibrate the map with data rather than guesswork.
+- **Persistent match list** — Ranked closest matches always visible in the sidebar regardless of which tab is active.
+
+## Screenshots
+
+**Similarity Map**
+![Similarity Map](data/img/similarity_map.png)
+
+**Player Comparison**
+![Player Comparison](data/img/player_comparison.png)
+
+**Score Distribution**
+![Score Distribution](data/img/score_distribution.png)
 
 ## Quickstart
 
@@ -77,6 +88,7 @@ wnba-player-similarity/
 ├── requirements.txt    # Python dependencies
 ├── AGENT.md            # Project blueprint and column reference
 ├── data/
+│   ├── img/            # Screenshots for README
 │   ├── raw/            # Cached API output (git-ignored)
 │   └── processed/      # Similarity matrix pickle (git-ignored)
 ├── src/
